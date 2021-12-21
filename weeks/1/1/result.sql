@@ -82,7 +82,8 @@ SELECT * FROM product_opt;
 CREATE TABLE accounts_user (
 	user_id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	user_name CHAR(100) NOT NULL,
-	user_password CHAR(100) NOT NULL
+	user_password CHAR(100) NOT NULL,
+	user_cart INT(10) UNSIGNED
 );
 
 INSERT INTO accounts_user 
@@ -109,8 +110,35 @@ SET user_id = 2,market_name = 'shop2', item_name = '리브드 니트 가디건',
 
 SELECT * FROM cart_cart_item;
 
-# 외래키 추가
+# Question 테이블 생성
+CREATE TABLE question (
+	q_id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
+	user_id INT(10) NOT NULL,
+	q_title TEXT NOT NULL,
+	q_body TEXT NOT NULL,
+	q_answer INT(1) NOT NULL -- 1은 답변완료
+);
 
+INSERT INTO question
+SET user_id = 1, q_title = '배송문의', q_body = '언제 출고되나요 ?', q_answer = 0;
+INSERT INTO question
+SET user_id = 2, q_title = '환불 및 교환', q_body = '컬러가 맘에 안드는데 교환이나 환불 가능할까요 ?', q_answer = 1;
+INSERT INTO question
+SET user_id = 1, q_title = '재입고 문의', q_body = '리브드 니트 가디건 언제 재입고 되나요 ?', q_answer = 1;
 
-# 유저1 장바구니 보기
-SELECT * FROM cart_cart_item WHERE user_id = 1;
+SELECT * FROM question;
+
+# answer 테이블 생성
+CREATE TABLE answer (
+	a_id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
+	q_id INT(10) UNSIGNED NOT NULL,
+	user_id INT(10) NOT NULL,
+	a_body TEXT NOT NULL
+);
+
+INSERT INTO answer
+SET q_id = 2, user_id = 2, a_body = '단순 변심으로 인한 환불 및 교환은 어렵습니다';
+INSERT INTO answer
+SET q_id = 3, user_id = 1, a_body = '재입고 알람 요청 하시면 당일날 알림으로 알려드립니다';
+
+SELECT * FROM answer;
