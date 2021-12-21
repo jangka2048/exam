@@ -58,7 +58,9 @@ create table cart_cart_item (
     -- 장바구니 이용한 유저 고유번호
     `user_id` BIGINT not null,
     -- 장바구니에 담긴 상품의 옵션 고유 번호
-    `product_opt_id` BIGINT not null
+    `product_opt_id` BIGINT not null,
+    -- 장바구니에 담을 수량
+    `item_quantity` BIGINT DEFAULT 1
 );
 
 create table product_question (
@@ -67,8 +69,6 @@ create table product_question (
     `question_id` BIGINT PRIMARY KEY AUTO_INCREMENT,
     -- 질문이 올라온 상품 번호
     `product_id` BIGINT not NULL,
-    -- 질문 제목
-    `title` text NOT NULL,
     -- 질문 내용
     `body` text not NULL,
     -- 질문 한 유저 번호
@@ -83,6 +83,8 @@ create table product_answer (
     `answer_id` BIGINT PRIMARY KEY AUTO_INCREMENT,
     -- 질문 번호
     `question_id` BIGINT NOT NULL,
+    -- 답변자
+    `answer_writer` TEXT NOT NULL,
     -- 답변 내용
     `body` text not NULL,
     -- 답변 작성 날짜
@@ -170,36 +172,36 @@ insert into cart_cart_item
 
 INSERT INTO product_question
     set product_id = 3,
-    title = "제가 발이 커서 그러는데",
     body = "제가 발이 커서 그러는데 275사이즈는 없나요?",
     user_id = 2,
     reg_date = now();
 
 INSERT INTO product_question
     set product_id = 2,
-    title = "친구가 가게를 하는데",
     body = "제 친구가 가게를 하는데 거기보다 저렴하네요 굳 사이즈 하나 더 작은거 없을까요",
     user_id = 1,
     reg_date = now();
 
 INSERT INTO product_question
     set product_id = 1,
-    title = "입고 날짜 문의",
     body = "혹시 언제쯤 입고 될까요?",
     user_id = 3,
     reg_date = now();
 
 INSERT INTO product_answer
     set question_id = 1,
+    answer_writer = "텀블러 신발가게 사장",
     body = "네 없어용",
     reg_date = now();
 
 INSERT INTO product_answer
     set question_id = 2,
+    answer_writer = "삼식이네 옷가게 사장",
     body = "ㅎㅎ 감사합니다 사이즈 작은건 없어요",
     reg_date = now();
 
 INSERT INTO product_answer
     set question_id = 3,
+    answer_writer = "뽀식이네 옷가게 직원",
     body = "내일 모레 입고 됩니다.",
     reg_date = now()
