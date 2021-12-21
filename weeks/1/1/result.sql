@@ -39,36 +39,50 @@ SET reg_date = NOW(), shop_name = 'shop2', update_date = NOW();
 
 SELECT * FROM markets_market;
 
-# 상품옵션 테이블 생성
-CREATE TABLE products_product_opt(
-	market_id INT(10) UNSIGNED NOT NULL,
-	product_id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	`name` CHAR(100) NOT NULL UNIQUE,
-	sale_name CHAR(100) NOT NULL UNIQUE,
-	price INT(10) UNSIGNED NOT NULL,
+# 상품 테이블 생성
+CREATE TABLE product (
+	id INT(10) UNSIGNED NOT NULL,
+	product_id INT(10) UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT,
+	`name` CHAR(100) NOT NULL,
+	price INT(10) UNSIGNED NOT NULL
+);
+
+INSERT INTO product
+SET id = 1, `name` = '코트', price = 259000;
+INSERT INTO product
+SET id = 1, `name` = '코트', price = 199000;
+INSERT INTO product
+SET id = 2, `name` = '가디건', price = 45000;
+
+SELECT * FROM product;
+
+# 상품옵션 테이블 생성 ( + color, size )
+CREATE TABLE product_opt(
+	product_id INT(10) UNSIGNED NOT NULL,
+	sale_name CHAR(100) NOT NULL,
 	sale_price INT(10) UNSIGNED NOT NULL,
+	color CHAR(100) NOT NULL,
+	size CHAR(10) NOT NULL,
 	hide_status INT(1) UNSIGNED NOT NULL,
 	sold_out_status INT(1) UNSIGNED NOT NULL
 );
 
-INSERT INTO products_product_opt
-SET market_id = 1, `name` = '코트', sale_name = '벨트 울 코트', price = 259000, sale_price = 259000, 
-hide_status = 0, sold_out_status = 0;
-INSERT INTO products_product_opt
-SET market_id = 1, `name` = '롱코트', sale_name = '오버사이즈 롱 코트', price = 199000, sale_price = 100000,
-hide_status = 0, sold_out_status = 1;
-INSERT INTO products_product_opt
-SET market_id = 2, `name` = '니트 가디건', sale_name = '리브드 니트 가디건', price = 45000, sale_price = 25000,
-hide_status = 0, sold_out_status = 0;
+INSERT INTO product_opt
+SET product_id = 1, sale_name = '벨트 울 코트', sale_price = 259000, color = 'BK', size = 'Free', hide_status = 0, sold_out_status = 0;
+INSERT INTO product_opt
+SET product_id = 2, sale_name = '오버사이즈 롱 코트', sale_price = 10000, color = 'GR', size = 'L', hide_status = 1, sold_out_status = 1;
+INSERT INTO product_opt
+SET product_id = 2, sale_name = '오버사이즈 롱 코트', sale_price = 10000, color = 'BG', size = 'M', hide_status = 0, sold_out_status = 0;
+INSERT INTO product_opt
+SET product_id = 3, sale_name = '리브드 니트 가디건', sale_price = 25000, color = 'PK', size = 'Free', hide_status = 0, sold_out_status = 1;
 
-SELECT * FROM products_product_opt;
+SELECT * FROM product_opt;
 
 # 회원정보 테이블 생성
 CREATE TABLE accounts_user (
 	user_id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	user_name CHAR(100) NOT NULL,
-	user_password CHAR(100) NOT NULL,
-	user_cart INT(10)
+	user_password CHAR(100) NOT NULL
 );
 
 INSERT INTO accounts_user 
@@ -80,7 +94,6 @@ SELECT * FROM accounts_user;
 
 # 장바구니아이템 테이블 생성
 CREATE TABLE cart_cart_item (
-	item_count INT(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	user_id INT(10) NOT NULL,
 	market_name CHAR(100) NOT NULL,
 	item_name CHAR(100) NOT NULL,
@@ -97,17 +110,7 @@ SET user_id = 2,market_name = 'shop2', item_name = '리브드 니트 가디건',
 SELECT * FROM cart_cart_item;
 
 # 외래키 추가
-ALTER TABLE products_product_opt
-ADD FOREIGN KEY (market_id) REFERENCES markets_market(id);
 
-ALTER TABLE cart_cart_item
-ADD FOREIGN KEY (market_name) REFERENCES markets_market(shop_name);
-
-ALTER TABLE cart_cart_item 
-ADD FOREIGN KEY (item_name) REFERENCES products_product_opt(sale_name);
-
-ALTER TABLE accounts_user
-ADD FOREIGN KEY (user_cart) REFERENCES cart_cart_item(item_count);
 
 # 유저1 장바구니 보기
 SELECT * FROM cart_cart_item WHERE user_id = 1;
